@@ -15,7 +15,7 @@ logger = pysys.Logger.get_instance()
 #Object definitions
 
 #User objects
-vision_proccesing_subsystem = VisionProccesingSubsystem(name="VisionProccesingSubsystem", camera_id=0)
+vision_proccesing_subsystem = VisionProccesingSubsystem(name="VisionProccesingSubsystem", camera_id=1)
 #User objects
 
 #Setup
@@ -30,7 +30,7 @@ scheduler.setup_scheduler(
     }
     )
 
-system.setup_system(loop_period=0.02)
+system.setup_system(loop_period=2)
 #Setup
 
 #User setup
