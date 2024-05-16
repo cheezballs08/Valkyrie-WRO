@@ -12,7 +12,7 @@ class VisionProccesingSubsystem(pysys.Subsystem):
         self.red_masked_frame = None
         self.green_mask = None
         self.red_mask = None
-        self.kernel = np.ones((5, 5), np.uint8)
+        self.kernel = np.ones((25, 25), np.uint8)
         
     def capture_frame(self):
         is_succesfull, frame =  self.camera.read()
@@ -36,6 +36,23 @@ class VisionProccesingSubsystem(pysys.Subsystem):
         
         return mask
     
+    def draw_bounding_boxes(self):
+        red_contours, red_hierarchy = cv.findContours(self.red_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        for contour in red_contours:
+            if cv.contourArea(contour) < 70:
+                break
+            x, y, w, h = cv.boundingRect(contour)
+            cv.rectangle(self.frame, (x,y), (x+w, y+h), (0,0,255),2)
+            cv.putText(self.frame, 'Red Object', (x, y-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,255), 2)
+            
+        green_contours, green_hierarchy = cv.findContours(self.green_mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        for contour in green_contours:
+            if cv.contourArea(contour) < 30:
+                break
+            x, y, w, h = cv.boundingRect(contour)
+            cv.rectangle(self.frame, (x,y), (x+w, y+h), (0,255,0),2)
+            cv.putText(self.frame, 'Green Object', (x, y-10), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 2)
+            
     def update_masks(self):
         self.green_mask = self.mask_frame(np.array([25, 52, 72], np.uint8), np.array([102, 255, 255], np.uint8), self.kernel)
         self.red_mask = self.mask_frame(np.array([136, 87, 111], np.uint8), np.array([180, 255, 255], np.uint8), self.kernel)
@@ -50,5 +67,6 @@ class VisionProccesingSubsystem(pysys.Subsystem):
         while True:
             self.capture_frame()
             self.update_masks()
-            self.show_frames(frames=[self.frame, self.red_masked_frame, self.green_masked_frame])
+            self.draw_bounding_boxes()
+            self.show_frames(frames=[self.frame, self.green_masked_frame, self.red_masked_frame])
             cv.waitKey(1)
