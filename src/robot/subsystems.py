@@ -74,17 +74,17 @@ class VisionProccesingSubsystem(pysys.Subsystem):
 
 class DrivetrainSubsystem(pysys.Subsystem):
 
-    def __init__(self, name: str = "DrivetrainSubsystem" drive_motor_pins: list[int], servo_id: int, servo_min_max_angle: list[float]):
+    def __init__(self, name: str = "DrivetrainSubsystem", drive_motor_pins: list[int] = [0, 0], servo_id: int = 0, servo_min_max_angle: list[float] = [0, 0]):
         super().__init__(self)
         self.drive_motor = gpiozero.Motor(drive_motor_pins[0], drive_motor_pins[1], pwm=True)
         
         self.servo = gpiozero.AngularServo(servo_id, min_angle=servo_min_max_angle[0], max_angle=servo_min_max_angle[1])
 
-    def set_motor_speed(speed: float):
+    def set_motor_speed(self, speed: float):
         if speed < 0:
             self.drive_motor.forward(speed)    
         else:
             self.drive_motor.backward(speed)
 
-    def set_servo_angle(angle: float):
+    def set_servo_angle(self, angle: float):
         self.servo.angle = angle
