@@ -1,6 +1,7 @@
 import numpy as np
 import pysys.pysys as pysys
 import cv2 as cv
+import gpiozero
 
 class VisionProccesingSubsystem(pysys.Subsystem):
     
@@ -70,3 +71,20 @@ class VisionProccesingSubsystem(pysys.Subsystem):
             self.draw_bounding_boxes()
             self.show_frames(frames=[self.frame, self.green_masked_frame, self.red_masked_frame])
             cv.waitKey(1)
+
+class DrivetrainSubsystem(pysys.Subsystem):
+
+    def __init__(self, name: str = "DrivetrainSubsystem" drive_motor_pins: list[int], servo_id: int, servo_min_max_angle: list[float]):
+        super().__init__(self)
+        self.drive_motor = gpiozero.Motor(drive_motor_pins[0], drive_motor_pins[1], pwm=True)
+        
+        self.servo = gpiozero.AngularServo(servo_id, min_angle=servo_min_max_angle[0], max_angle=servo_min_max_angle[1])
+
+    def set_motor_speed(speed: float):
+        if speed < 0:
+            self.drive_motor.forward(speed)    
+        else:
+            self.drive_motor.backward(speed)
+
+    def set_servo_angle(angle: float):
+        self.servo.angle = angle
