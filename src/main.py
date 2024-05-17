@@ -16,17 +16,20 @@ logger = pysys.Logger.get_instance()
 
 #User objects
 vision_proccesing_subsystem = VisionProccesingSubsystem(name="VisionProccesingSubsystem", camera_id=1)
+drivetrain_subsystem = DrivetrainSubsystem(name="DrivetrainSubsystem", drive_motor_pins=[0, 0], servo_id=0, servo_min_max_angle=[0, 0])
 #User objects
 
 #Setup
 scheduler.setup_scheduler(
     subsystem_commands_dictionary=
     {
-        vision_proccesing_subsystem: ()
+        vision_proccesing_subsystem: (),
+        drivetrain_subsystem: ()
     },
     subsystem_default_command_dicitionary=
     {
-        vision_proccesing_subsystem: None
+        vision_proccesing_subsystem: None,
+        drivetrain_subsystem: None
     }
     )
 

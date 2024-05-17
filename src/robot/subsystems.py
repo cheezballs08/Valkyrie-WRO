@@ -2,6 +2,7 @@ import numpy as np
 import pysys.pysys as pysys
 import cv2 as cv
 import gpiozero
+#from gpiozero.pins.mock import MockFactory <---> For testing purposes
 
 class VisionProccesingSubsystem(pysys.Subsystem):
     
@@ -88,3 +89,10 @@ class DrivetrainSubsystem(pysys.Subsystem):
 
     def set_servo_angle(self, angle: float):
         self.servo.angle = angle
+
+    def periodic(self):
+        pass
+    
+    def thread_periodic(self):
+        pass
+    
