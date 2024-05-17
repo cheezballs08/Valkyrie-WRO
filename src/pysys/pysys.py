@@ -77,8 +77,6 @@ class Scheduler(Singleton):
             
     def start_subsystem_threads(self):
         for subsystem in self.subsystems:
-            if subsystem.has_thread_started is False:
-                subsystem.has_thread_started = True
                 thread = threading.Thread(target=subsystem.thread_periodic)
                 thread.start()
 
@@ -198,8 +196,9 @@ class System(Singleton):
         
     def run_system(self):
         self.tick_count += 1
-        if self.has_threads_started is True:
+        if self.has_threads_started is False:
             self.scheduler.start_subsystem_threads()
+            self.has_threads_started = True
         
         self.loop_start_time = time.time()
         self.update_time()

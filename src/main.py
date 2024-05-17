@@ -1,4 +1,5 @@
 #Imports
+import cv2 as cv
 import os
 from pysys.pysys import *
 from robot.commands import *
@@ -14,36 +15,25 @@ logger = pysys.Logger.get_instance()
 #Object definitions
 
 #User objects
-command1 = pysys.Command("Command 1")
-command2 = pysys.Command("Command 2")
-command3 = pysys.Command("Command 3")
-command4 = pysys.Command("Command 4")
-
-subsystem1 = pysys.Subsystem("Subsystem 1")
-subsystem2 = pysys.Subsystem("Subsystem 2")
+vision_proccesing_subsystem = VisionProccesingSubsystem(name="VisionProccesingSubsystem", camera_id=1)
 #User objects
 
 #Setup
 scheduler.setup_scheduler(
     subsystem_commands_dictionary=
     {
-        subsystem1: (command1, command2),
-        subsystem2: (command3, command4, command2)
+        vision_proccesing_subsystem: ()
     },
     subsystem_default_command_dicitionary=
     {
-        subsystem1: command1,
-        subsystem2: command3
+        vision_proccesing_subsystem: None
     }
     )
 
-system.setup_system(loop_period=0.02)
+system.setup_system(loop_period=2)
 #Setup
 
 #User setup
-
-scheduler.schedule_command(command4)
-
 #User setup
 
 #Main Loop (Feel free to change this however you want.)
@@ -54,18 +44,11 @@ scheduler.remove_duplicate_items() #Just in case, I would advise you to keep thi
 
 while system.is_active:
     os.system('cls' if os.name == 'nt' else 'clear')
-    
-    if system.tick_count == 5:
-        scheduler.schedule_command(command2)
-        
-    if system.tick_count == 8:
-        scheduler.interrupt_command(command4)
-        
-    if system.tick_count == 12:
-        scheduler.interrupt_command(command2)
-    
+
     system.run_system()
-    
-    if system.tick_count == 17:
-        system.exit_system()
 #Main Loop
+
+#Cleanup
+cv.destroyAllWindows()
+vision_proccesing_subsystem.camera.release()
+#Cleanup
