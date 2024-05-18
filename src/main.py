@@ -6,6 +6,11 @@ from robot.commands import *
 from robot.subsystems import *
 #Imports
 
+#User Functions
+def percent_to_255(percentage: float) -> int:
+    return int(percentage * 255 / 100)
+#User Functions
+
 #Object definitions
 scheduler = pysys.Scheduler.get_instance()
 
@@ -14,9 +19,17 @@ system = pysys.System.get_instance()
 logger = pysys.Logger.get_instance()
 #Object definitions
 
+#25, 52, 72, 102, 255, 255
+
 #User objects
-vision_proccesing_subsystem = VisionProccesingSubsystem(name="VisionProccesingSubsystem", camera_id=1)
-drivetrain_subsystem = DrivetrainSubsystem(name="DrivetrainSubsystem", drive_motor_pins=[0, 0], servo_id=0, servo_min_max_angle=[0, 0])
+vision_proccesing_subsystem = VisionProccesingSubsystem(
+    name="VisionProccesingSubsystem",
+    camera_id=1,
+    kernel_size=10,
+    green_bounds=[[36, percent_to_255(25), percent_to_255(25)], [86, percent_to_255(100), percent_to_255(100)]],
+    red_bounds=[[0, percent_to_255(50), percent_to_255(50)], [10, percent_to_255(100), percent_to_255(100)]],
+    area_limit=70
+    )
 #User objects
 
 #Setup
@@ -24,12 +37,10 @@ scheduler.setup_scheduler(
     subsystem_commands_dictionary=
     {
         vision_proccesing_subsystem: (),
-        drivetrain_subsystem: ()
     },
     subsystem_default_command_dicitionary=
     {
         vision_proccesing_subsystem: None,
-        drivetrain_subsystem: None
     }
     )
 
@@ -46,8 +57,6 @@ with open("log.pylog", "w") as file:
 scheduler.remove_duplicate_items() #Just in case, I would advise you to keep this here.
 
 while system.is_active:
-    os.system('cls' if os.name == 'nt' else 'clear')
-
     system.run_system()
 #Main Loop
 
