@@ -202,8 +202,6 @@ class System(Singleton):
         
         self.loop_start_time = time.time()
         self.update_time()
-        
-        self.logger.log_to_terminal(f"Loop Started, Tick: {self.tick_count}, Current time: {self.time_elapsed}")
         self.logger.log_to_file(f"Loop Started, Tick: {self.tick_count}, Current time: {self.time_elapsed}", "log.pylog")
         
         self.scheduler.run_subsystem_periodics()
