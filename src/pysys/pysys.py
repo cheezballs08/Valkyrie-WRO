@@ -214,14 +214,11 @@ class System(Singleton):
         
         self.update_time()
         
-        self.logger.log_to_terminal(f"Loop Ended, Tick: {self.tick_count}, Current time: {self.time_elapsed}")
-        self.logger.log_to_terminal("")
         self.logger.log_to_file(f"Loop Ended, Tick: {self.tick_count}, Current time: {self.time_elapsed} \n", "log.pylog")
         
         if self.loop_period > self.time_since_last_loop:
             time.sleep(self.loop_period - self.time_since_last_loop)
         else:
-            self.logger.log_to_terminal(f"Loop Period Exceeded, Current Tick: {self.tick_count}, Current Time: {self.time_elapsed}")
             self.logger.log_to_file(f"Loop Period Exceeded, Current Tick: {self.tick_count}, Current Time: {self.time_elapsed}", "log.pylog")
             
     def exit_system(self):
